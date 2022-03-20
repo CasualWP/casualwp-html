@@ -1,0 +1,25 @@
+{
+    "name": "casualwp/element",
+    "description": "HTML elements easily with PHP",
+    "version": "1.0.0",
+    "type": "library",
+    "keywords": ["casualwp"],
+    "homepage": "https://casualwp.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jyri Isomäki"
+        }
+    ],
+    "support": {
+        "email": "casualwp@gmail.com"
+    },
+    "require": {
+        "php": ">=7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "CasualWP\\HTML\\": "src/"
+        }
+    }
+}
