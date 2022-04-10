@@ -7,7 +7,7 @@ class Element {
     protected $attributes;
     protected $content;
 
-    public function __construct(string $tag, array $attributes = null, array $content = null) {
+    public function __construct(string $tag, array $attributes = null, $content = null) {
         $this->tag = $tag;
         $this->attributes = $attributes;
         $this->content = $content;
@@ -25,6 +25,16 @@ class Element {
         return $this->attributes;
     }
 
+    public function add_content($content) {
+        if(is_array($content)) {
+            $this->content = array_merge($this->content, $content);
+        } else {
+            $this->content[] = $content;
+        }
+
+        return $this;
+    }
+
     public function get_content() : ?array {
         return $this->content;
     }
@@ -34,21 +44,25 @@ class Element {
         echo $this->start_tag;
 
         if(!empty($this->content)) {
-            $this->render_content($this->content);
+            if(is_array($this->content)) {
+                array_walk($this->content, function($content) {
+                    $this->render_content($content);
+                });
+            } else {
+                $this->render_content($this->content);
+            }
         }
 
         echo $this->end_tag;
         echo ob_get_clean();
     }
 
-    protected function render_content(array $content) : void {
-        array_walk($content, function($content) {
-            if($content instanceof Element) {
-                $content->render();
-            } else {
-                echo $content;
-            }
-        });
+    protected function render_content($content) : void {
+        if($content instanceof Element) {
+            $content->render();
+        } else {
+            echo $content;
+        }
     }
 
     protected function create_start_tag(string $tag, string $attributes_string = null) : string {
