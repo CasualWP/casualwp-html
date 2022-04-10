@@ -13,8 +13,6 @@ class Element {
         $this->content = $content;
         
         $this->attributes_string = !empty($attributes) ? $this->create_attributes_string($attributes) : null;
-        $this->start_tag = $this->create_start_tag($this->tag, $this->attributes_string);
-        $this->end_tag = boolval($this->content) ? $this->create_end_tag($this->tag) : null;
     }
 
     public function get_tag() : string {
@@ -41,7 +39,7 @@ class Element {
 
     public function render() : void {
         ob_start();
-        echo $this->start_tag;
+        echo $this->render_start_tag();
 
         if(!empty($this->content)) {
             if(is_array($this->content)) {
@@ -53,7 +51,7 @@ class Element {
             }
         }
 
-        echo $this->end_tag;
+        echo $this->render_end_tag();
         echo ob_get_clean();
     }
 
@@ -65,12 +63,12 @@ class Element {
         }
     }
 
-    protected function create_start_tag(string $tag, string $attributes_string = null) : string {
-        return trim("<{$tag} {$attributes_string}>");
+    protected function render_start_tag() : string {
+        return trim("<{$this->tag} {$this->attributes_string}>");
     }
 
-    protected function create_end_tag(string $tag) : ?string {
-        return "</{$tag}>";
+    protected function render_end_tag() : ?string {
+        return boolval($this->content) ? "</{$this->tag}>" : null;
     }
 
     protected function create_attributes_string(array $attributes) : ?string {
